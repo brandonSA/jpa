@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.demo.jpa.model.Product;
 import com.demo.jpa.model.ProductRequestDTO;
 import com.demo.jpa.model.ProductResponseDTO;
-import com.demo.jpa.model.Result;
 import com.demo.jpa.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,24 +35,24 @@ public class ProductController {
   @GetMapping
   @Operation(summary = "Get all products", description = "Retrieve a list of all products from the product table")
   public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
-    Result<List<ProductResponseDTO>> result = productService.getAllProducts();
-    return result.isSuccess() ? ResponseEntity.ok(result.getValue()) : ResponseEntity.notFound().build();
+    List<ProductResponseDTO> result = productService.getAllProducts();
+    return result.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(result);
   }
 
   // Get product by ID
   @GetMapping("/{id}")
   @Operation(summary = "Get product by ID", description = "Retrieve a product by its ID from the product table")
-  public ResponseEntity<Product> getProductById(@PathVariable UUID id) {
-    Result<Product> result = productService.getProductById(id);
-    return result.isSuccess() ? ResponseEntity.ok(result.getValue()) : ResponseEntity.notFound().build();
+  public ResponseEntity<Product> getProductById(@Valid @PathVariable UUID id) {
+    Product result = productService.getProductById(id);
+    return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
   }
 
   // Create product
   @PostMapping
   @Operation(summary = "Create a new product", description = "Add a new product to the product table")
   public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
-    Result<Product> result = productService.createProduct(productRequest);
-    return result.isSuccess() ? ResponseEntity.status(HttpStatus.CREATED).body(result.getValue())
+    Product result = productService.createProduct(productRequest);
+    return result != null ? ResponseEntity.status(HttpStatus.CREATED).body(result)
         : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
   }
 
