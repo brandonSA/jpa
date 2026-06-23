@@ -1,6 +1,9 @@
 package com.demo.jpa.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,9 +13,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "products")
+@Getter
+@Setter
 public class Product {
   
   @Id
@@ -29,24 +36,6 @@ public class Product {
   @Size(max = 50)
   private String description;
 
-  // Constructors
-  public Product() {}
-
-  public Product(String name, double price) {
-    this.name = name;
-    this.price = price;
-  }
-
-  //Getters and Setters
-  public UUID getId() { return id; }
-  public void setId(UUID id) { this.id = id; }
-
-  public String getName() { return name; }
-  public void setName(String name) { this.name = name; }
-
-  public double getPrice() { return price; }
-  public void setPrice(double price) { this.price = price; }
-
-  public String getDescription() { return description; }
-  public void setDescription(String description) { this.description = description; }
+  @CreationTimestamp
+  private LocalDateTime createdAt;
 }
