@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.jpa.dto.request.ProductRequestDTO;
+import com.demo.jpa.dto.response.ApiResponse;
 import com.demo.jpa.dto.response.ProductResponseDTO;
 import com.demo.jpa.entity.Product;
 import com.demo.jpa.service.ProductService;
@@ -36,35 +37,34 @@ public class ProductController {
   // Get all products
   @GetMapping
   @Operation(summary = "Get all products", description = "Retrieve a list of all products from the product table")
-  public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(@RequestParam(defaultValue = "0") int page,
+  public ResponseEntity<ApiResponse<Page<ProductResponseDTO>>> getAllProducts(@RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size) {
     Page<ProductResponseDTO> result = productService.getAllProducts(page, size);
-    return ResponseEntity.ok(result);
+    return ResponseEntity.ok(ApiResponse.success(result));
   }
 
   // Get product by ID
   @GetMapping("/{id}")
   @Operation(summary = "Get product by ID", description = "Retrieve a product by its ID from the product table")
-  public ResponseEntity<Product> getProductById(@Valid @PathVariable UUID id) {
+  public ResponseEntity<ApiResponse<Product>> getProductById(@Valid @PathVariable UUID id) {
     Product result = productService.getProductById(id);
-    return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
+    return ResponseEntity.ok(ApiResponse.success(result));
   }
 
   // Create product
   @PostMapping
   @Operation(summary = "Create a new product", description = "Add a new product to the product table")
-  public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
+  public ResponseEntity<ApiResponse<Product>> createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
     Product result = productService.createProduct(productRequest);
-    return result != null ? ResponseEntity.status(HttpStatus.CREATED).body(result)
-        : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    return ResponseEntity.ok(ApiResponse.success(result));
   }
 
   // Update product
   @PutMapping("/{id}")
   @Operation(summary = "Update an existing product", description = "Update the details of an existing product in the product table")
-  public ResponseEntity<Product> updateProduct(@Valid @PathVariable("id") final UUID id,
+  public ResponseEntity<ApiResponse<Product>> updateProduct(@Valid @PathVariable("id") final UUID id,
       @Valid @RequestBody final ProductRequestDTO productRequest) {
     Product updatedProduct = productService.updateProduct(id, productRequest);
-    return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+    return ResponseEntity.ok(ApiResponse.success(updatedProduct));
   }
 }

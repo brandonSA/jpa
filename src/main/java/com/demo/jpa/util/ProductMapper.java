@@ -7,7 +7,7 @@ import com.demo.jpa.entity.Product;
 public class ProductMapper {
   
   public ProductResponseDTO mapToResponseDTO(Product product) {
-    return new ProductResponseDTO(product.getId(), product.getName(), product.getPrice());
+    return new ProductResponseDTO(product.getId(), product.getName(), product.getPrice(), product.getDescription());
   }
 
   public Product mapToEntity(ProductRequestDTO productRequestDTO) {
