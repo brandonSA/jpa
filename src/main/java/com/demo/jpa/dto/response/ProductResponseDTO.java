@@ -1,4 +1,4 @@
-package com.demo.jpa.model;
+package com.demo.jpa.dto.response;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.demo.jpa.model;
+package com.demo.jpa.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,8 +1,8 @@
-package com.demo.jpa.mapper;
+package com.demo.jpa.util;
 
-import com.demo.jpa.model.Product;
-import com.demo.jpa.model.ProductRequestDTO;
-import com.demo.jpa.model.ProductResponseDTO;
+import com.demo.jpa.dto.request.ProductRequestDTO;
+import com.demo.jpa.dto.response.ProductResponseDTO;
+import com.demo.jpa.entity.Product;
 
 public class ProductMapper {
   

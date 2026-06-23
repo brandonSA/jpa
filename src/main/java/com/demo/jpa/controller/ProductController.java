@@ -1,9 +1,9 @@
 package com.demo.jpa.controller;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,19 +12,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.jpa.model.Product;
-import com.demo.jpa.model.ProductRequestDTO;
-import com.demo.jpa.model.ProductResponseDTO;
+import com.demo.jpa.dto.request.ProductRequestDTO;
+import com.demo.jpa.dto.response.ProductResponseDTO;
+import com.demo.jpa.entity.Product;
 import com.demo.jpa.service.ProductService;
+import com.demo.jpa.constant.ApiConstants;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping(ApiConstants.PRODUCTS_PATH)
 @Tag(name = "Product Management", description = "Endpoints for managing products")
 public class ProductController {
 
@@ -34,9 +36,10 @@ public class ProductController {
   // Get all products
   @GetMapping
   @Operation(summary = "Get all products", description = "Retrieve a list of all products from the product table")
-  public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
-    List<ProductResponseDTO> result = productService.getAllProducts();
-    return result.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(result);
+  public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(@RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size) {
+    Page<ProductResponseDTO> result = productService.getAllProducts(page, size);
+    return ResponseEntity.ok(result);
   }
 
   // Get product by ID

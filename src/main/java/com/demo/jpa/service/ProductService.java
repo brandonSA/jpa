@@ -1,17 +1,18 @@
 package com.demo.jpa.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.demo.jpa.dto.request.ProductRequestDTO;
+import com.demo.jpa.dto.response.ProductResponseDTO;
+import com.demo.jpa.entity.Product;
 import com.demo.jpa.exception.NotFoundException;
-import com.demo.jpa.mapper.ProductMapper;
-import com.demo.jpa.model.Product;
-import com.demo.jpa.model.ProductRequestDTO;
-import com.demo.jpa.model.ProductResponseDTO;
 import com.demo.jpa.repository.ProductRepository;
+import com.demo.jpa.util.ProductMapper;
 
 @Service
 public class ProductService {
@@ -25,11 +26,10 @@ public class ProductService {
     return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product", id));
   }
 
-  public List<ProductResponseDTO> getAllProducts() {
-    List<ProductResponseDTO> products = productRepository.findAll().stream()
-        .map(productMapper::mapToResponseDTO)
-        .toList();
-    return products.isEmpty() ? List.of() : products;
+  public Page<ProductResponseDTO> getAllProducts(int page, int size) {
+    Page<ProductResponseDTO> products = productRepository.findAll(PageRequest.of(page, size))
+        .map(productMapper::mapToResponseDTO);
+    return products.isEmpty() ? Page.empty() : products;
   }
 
   public Product createProduct(ProductRequestDTO productRequest) {
